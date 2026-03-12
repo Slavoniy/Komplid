@@ -1,0 +1,40 @@
+#cloud-config
+package_update: true
+package_upgrade: true
+
+# Пакеты, которые будут установлены при первой загрузке
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - software-properties-common
+  - git
+  - ufw
+
+runcmd:
+  # Добавляем ключ Docker GPG
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+  # Добавляем репозиторий Docker
+  - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+  # Обновляем apt и устанавливаем Docker Engine + Compose
+  - sudo apt-get update
+  - sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+  # Включаем и запускаем Docker (на случай, если не запустился сам)
+  - systemctl enable docker
+  - systemctl start docker
+
+  # Добавляем пользователя (если не root) в группу docker (например, если есть user 'ubuntu')
+  # - usermod -aG docker ubuntu
+
+  # Настройка Firewall (UFW)
+  - ufw default deny incoming
+  - ufw default allow outgoing
+  - ufw allow ssh     # Порт 22 для доступа
+  - ufw allow 80      # HTTP (если будет Nginx)
+  - ufw allow 443     # HTTPS (если будет Nginx)
+  - ufw allow 5173    # Frontend (опционально, лучше закрыть Nginx'ом в проде)
+  - ufw allow 8000    # Backend API (опционально)
+  - ufw --force enable
