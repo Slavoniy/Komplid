@@ -1,0 +1,39 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: constructiondocs_backend_prod
+    ports:
+      - "8000:8000"
+    environment:
+      # Замените эти значения или передайте их через панель управления Timeweb / .env файл
+      - DATABASE_URL=${DATABASE_URL}
+      - MOCK_SERVICES_URL=http://mock_services:8001
+      - MINIO_ENDPOINT=${MINIO_ENDPOINT} # e.g. s3.timeweb.com
+      - MINIO_ACCESS_KEY=${MINIO_ACCESS_KEY}
+      - MINIO_SECRET_KEY=${MINIO_SECRET_KEY}
+      - MINIO_BUCKET_NAME=${MINIO_BUCKET_NAME}
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        - VITE_API_URL=${VITE_API_URL}
+    container_name: constructiondocs_frontend_prod
+    ports:
+      - "5173:5173"
+    environment:
+      # URL вашего бэкенда для запросов с клиента (должен быть публичным, например https://api.yourdomain.ru)
+      - VITE_API_URL=${VITE_API_URL}
+    depends_on:
+      - backend
+
+  mock_services:
+    build:
+      context: ./mock_services
+      dockerfile: Dockerfile.prod
+    container_name: constructiondocs_mocks_prod
+    ports:
+      - "8001:8001"
