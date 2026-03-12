@@ -1,4 +1,4 @@
-# BuildDocs: Автоматизация строительной исполнительной документации
+# ConstructionDocs: Автоматизация строительной исполнительной документации
 
 Платформа B2B SaaS для генерации и ведения строительной документации (АОСР, акты КС-2/КС-3, общие журналы работ). Проект спроектирован с учетом требований ФЗ-152 и стандартов Ростехнадзора, СНиП, СП и ГОСТ.
 
@@ -39,5 +39,5 @@ docker-compose down
 ## Разработка
 - При редактировании кода бэкенда (`/backend`) или фронтенда (`/frontend`) серверы внутри Docker-контейнеров автоматически перезапускаются (Hot Reload).
 - При добавлении новых моделей в `backend/database.py`, создайте новую миграцию Alembic, зайдя в контейнер бэкенда:
-  `docker exec -it builddocs_backend alembic revision --autogenerate -m "Initial"`
-  И примените её: `docker exec -it builddocs_backend alembic upgrade head`
+  `docker exec -it constructiondocs_backend alembic revision --autogenerate -m "Initial"`
+  И примените её: `docker exec -it constructiondocs_backend alembic upgrade head`

@@ -4,7 +4,7 @@ from sqlalchemy import text
 from database import engine, get_db
 
 app = FastAPI(
-    title="BuildDocs API",
+    title="ConstructionDocs API",
     description="Микросервис бэкенда для платформы строительной документации",
     version="1.0.0"
 )

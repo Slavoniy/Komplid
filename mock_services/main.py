@@ -3,7 +3,7 @@ from pydantic import BaseModel
 import uuid
 import time
 
-app = FastAPI(title="BuildDocs Mock Integration Services")
+app = FastAPI(title="ConstructionDocs Mock Integration Services")
 
 # --- Мок для 1С ---
 class ContractorData(BaseModel):

@@ -2,11 +2,11 @@
 services:
   db:
     image: postgres:15-alpine
-    container_name: builddocs_db
+    container_name: constructiondocs_db
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: builddocs
+      POSTGRES_DB: constructiondocs
     ports:
       - "5432:5432"
     volumes:
@@ -21,11 +21,11 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: builddocs_backend
+    container_name: constructiondocs_backend
     ports:
       - "8000:8000"
     environment:
-      - DATABASE_URL=postgresql://postgres:postgres@db:5432/builddocs
+      - DATABASE_URL=postgresql://postgres:postgres@db:5432/constructiondocs
       - MOCK_SERVICES_URL=http://mock_services:8001
     depends_on:
       db:
@@ -37,7 +37,7 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: builddocs_frontend
+    container_name: constructiondocs_frontend
     ports:
       - "5173:5173"
     environment:
@@ -53,7 +53,7 @@ services:
     build:
       context: ./mock_services
       dockerfile: Dockerfile
-    container_name: builddocs_mocks
+    container_name: constructiondocs_mocks
     ports:
       - "8001:8001"
     volumes:
