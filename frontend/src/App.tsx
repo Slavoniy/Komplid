@@ -1,33 +1,34 @@
-import { useState, useEffect } from 'react'
-import axios from 'axios'
-import './index.css'
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Login } from './pages/Login';
+import { Register } from './pages/Register';
+import { Profile } from './pages/Profile';
+import { useAuthStore } from './store/authStore';
 
-function App() {
-  const [healthStatus, setHealthStatus] = useState<string>('Проверка...')
+const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  if (!isAuthenticated) return <Navigate to="/login" replace />;
+  return <>{children}</>;
+};
 
-  useEffect(() => {
-    const checkHealth = async () => {
-      try {
-        const response = await axios.get('/api/health')
-        setHealthStatus(JSON.stringify(response.data))
-      } catch (error) {
-        setHealthStatus('Ошибка подключения к API')
-      }
-    }
-    checkHealth()
-  }, [])
-
+const App = () => {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-md max-w-md w-full">
-        <h1 className="text-2xl font-bold text-blue-600 mb-4">ConstructionDocs Frontend</h1>
-        <p className="text-gray-700 mb-2">Статус бэкенда и БД:</p>
-        <pre className="bg-gray-50 p-4 rounded text-sm overflow-x-auto text-gray-800">
-          {healthStatus}
-        </pre>
-      </div>
-    </div>
-  )
-}
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
 
-export default App
+        {/* Защищенные маршруты */}
+        <Route path="/profile" element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        } />
+
+        <Route path="*" element={<Navigate to="/login" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
+export default App;

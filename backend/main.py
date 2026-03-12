@@ -19,6 +19,14 @@ app = FastAPI(
 # Подключаем middleware для логирования действий
 app.add_middleware(AuditLogMiddleware)
 
+# Импорт роутов
+from api.routes.auth import router as auth_router, user_router
+
+# Регистрация роутов
+app.include_router(auth_router)
+app.include_router(user_router)
+
+
 @app.get("/api/health")
 def health_check(db: Session = Depends(get_db)):
     \"\"\"
