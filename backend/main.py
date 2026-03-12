@@ -16,22 +16,38 @@ app = FastAPI(
     version="1.0.0"
 )
 
+from fastapi.middleware.cors import CORSMiddleware
+
 # Подключаем middleware для логирования действий
 app.add_middleware(AuditLogMiddleware)
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Импорт роутов
 from api.routes.auth import router as auth_router, user_router
+from api.routes.company import router as company_router
+from api.routes.project import router as project_router
+from api.routes.role import router as role_router
 
 # Регистрация роутов
 app.include_router(auth_router)
 app.include_router(user_router)
+app.include_router(company_router)
+app.include_router(project_router)
+app.include_router(role_router)
 
 
 @app.get("/api/health")
 def health_check(db: Session = Depends(get_db)):
-    \"\"\"
+    """
     Проверка здоровья сервиса и подключения к БД.
-    \"\"\"
+    """
     try:
         # Простая проверка соединения
         result = db.execute(text("SELECT 1"))
