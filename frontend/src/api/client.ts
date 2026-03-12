@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Используем proxy, настроенный в Vite (или относительные пути, если один домен)
 const api = axios.create({
-  baseURL: '/api',
+  baseURL: 'http://localhost:8000/api', // Hardcoded for local verification
 });
 
 // Интерцептор для добавления токена к запросам

@@ -7,9 +7,12 @@ class Project(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False, index=True)
+    address = Column(String(500), nullable=True)
     company_id = Column(Integer, ForeignKey("companies.id"), nullable=False)
+    general_contractor_id = Column(Integer, ForeignKey("companies.id"), nullable=True)
 
-    company = relationship("Company", back_populates="projects")
+    company = relationship("Company", foreign_keys=[company_id], back_populates="projects")
+    general_contractor = relationship("Company", foreign_keys=[general_contractor_id], back_populates="general_contractor_projects")
     user_roles = relationship("UserProjectRole", back_populates="project")
 
 
